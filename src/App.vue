@@ -18,9 +18,23 @@
           placeholder="Informe o E-mail"
         ></b-form-input>
       </b-form-group>
-      <hr>
-      <b-button @click="salvar" size="lg" variant="primary">Salvar</b-button>
+      <hr />
+      <b-button @click="salvar" size="lg" variant="primary" class="mr-2"
+        >Salvar</b-button
+      >
+      <b-button @click="obterUsuarios" size="lg" variant="success"
+        >Obter Usuários</b-button
+      >
     </b-card>
+    <hr />
+    <b-list-group>
+      <b-list-group-item v-for="(user, i) in usuarios" :key="i">
+        <strong>Nome: </strong> {{ user.nome }} <strong>E-mail: </strong>
+        {{ user.email }}
+        <br />
+        <strong>ID: </strong> {{ i }}
+      </b-list-group-item>
+    </b-list-group>
   </div>
 </template>
 
@@ -29,6 +43,7 @@ export default {
   name: "App",
   data() {
     return {
+      usuarios: [],
       usuario: {
         nome: "",
         email: "",
@@ -36,9 +51,24 @@ export default {
     };
   },
   methods: {
-    salvar(){
-      console.log(this.usuario)
-    }
+    salvar() {
+      try {
+        this.$http.post("usuarios.json", this.usuario).then((res) => {
+          console.log(res);
+        });
+      } catch (error) {
+        console.log("Erro ao salvar dados. :(");
+      } finally {
+        this.usuario.nome = "";
+        this.usuario.email = "";
+      }
+    },
+    obterUsuarios() {
+      this.$http.get("usuarios.json").then((res) => {
+        this.usuarios = res.data;
+        console.log(res);
+      });
+    },
   },
   // created(){
   //   this.$http.post('usuarios.json',{
