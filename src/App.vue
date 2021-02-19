@@ -1,14 +1,44 @@
 <template>
   <div id="app">
-    <b-alert show>Padrao</b-alert>
+    <h1>HTTP com Axios</h1>
+    <b-card>
+      <b-form-group label="Nome:">
+        <b-form-input
+          type="text"
+          size="md"
+          v-model="usuario.nome"
+          placeholder="Informe o Nome"
+        ></b-form-input>
+      </b-form-group>
+      <b-form-group label="E-mail:">
+        <b-form-input
+          type="email"
+          size="md"
+          v-model="usuario.email"
+          placeholder="Informe o E-mail"
+        ></b-form-input>
+      </b-form-group>
+      <hr>
+      <b-button @click="salvar" size="lg" variant="primary">Salvar</b-button>
+    </b-card>
   </div>
 </template>
 
 <script>
-
 export default {
-  name: 'App',
-  components: {
+  name: "App",
+  data() {
+    return {
+      usuario: {
+        nome: "",
+        email: "",
+      },
+    };
+  },
+  methods: {
+    salvar(){
+      console.log(this.usuario)
+    }
   },
   // created(){
   //   this.$http.post('usuarios.json',{
@@ -16,7 +46,7 @@ export default {
   //     email: 'marcio@hotmail.com'
   //   }).then(res => console.log(res))
   // }
-}
+};
 </script>
 
 <style>
