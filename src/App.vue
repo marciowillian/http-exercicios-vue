@@ -32,7 +32,14 @@
         <strong>Nome: </strong> {{ user.nome }} <strong>E-mail: </strong>
         {{ user.email }}
         <br />
-        <strong>ID: </strong> {{ i}}
+        <strong>ID: </strong> {{ i }}
+        <br />
+        <b-button variant="warning" size="lg" @click="carregar(i)"
+          >Carregar</b-button
+        >
+        <b-button variant="danger" size="lg" class="ml-2" @click="excluir(i)"
+          >Excluir</b-button
+        >
       </b-list-group-item>
     </b-list-group>
   </div>
@@ -44,6 +51,7 @@ export default {
   data() {
     return {
       usuarios: [],
+      id: null,
       usuario: {
         nome: "",
         email: "",
@@ -51,16 +59,35 @@ export default {
     };
   },
   methods: {
+    limpar() {
+      this.usuario.nome = "";
+      this.usuario.email = "";
+      this.id = null;
+    },
+    carregar(id) {
+      console.log('ID: ', id)
+      this.id = id;
+      this.usuario = { ...this.usuarios[id] };
+    },
+    excluir(id) {
+      try {
+        this.$http.delete(`/usuarios/${id}.json`).then(() => this.limpar());
+      } catch (error) {
+        console.log('Erro ao tentar excluir o usuário.', error)
+      }finally{
+        this.obterUsuarios()
+      }
+    },
     salvar() {
       try {
-        this.$http.post("usuarios.json", this.usuario).then((res) => {
-          console.log(res);
-        });
+        const metodo = this.id ? 'patch' : 'post'
+        const finalURL = this.id ? `/${this.id}.json` : '.json'
+        this.$http[metodo](`/usuarios${finalURL}`, this.usuario).then(() => this.limpar);
       } catch (error) {
         console.log("Erro ao salvar dados. :(");
       } finally {
-        this.usuario.nome = "";
-        this.usuario.email = "";
+        this.limpar();
+        this.obterUsuarios()
       }
     },
     obterUsuarios() {

@@ -6,7 +6,10 @@ import axios from 'axios'
 Vue.use({
     install(Vue) {
         Vue.prototype.$http = axios.create({
-            baseURL: 'https://curso-vue-d29c4-default-rtdb.firebaseio.com/'
+            baseURL: 'https://curso-vue-d29c4-default-rtdb.firebaseio.com/',
+            headers: {
+                "Authorization" : "abc123"
+            }
         })
 
         Vue.prototype.$http.interceptors.request.use(config => {
