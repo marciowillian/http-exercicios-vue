@@ -32,7 +32,7 @@
         <strong>Nome: </strong> {{ user.nome }} <strong>E-mail: </strong>
         {{ user.email }}
         <br />
-        <strong>ID: </strong> {{ i }}
+        <strong>ID: </strong> {{ i}}
       </b-list-group-item>
     </b-list-group>
   </div>
