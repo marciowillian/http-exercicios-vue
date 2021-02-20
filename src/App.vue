@@ -1,6 +1,15 @@
 <template>
   <div id="app">
     <h1>HTTP com Axios</h1>
+    <b-alert
+      show
+      dismissible
+      v-for="mensagem in mensagens"
+      :key="mensagem.texto"
+      :variant="mensagem.tipo"
+    >
+      {{ mensagem.texto }}
+    </b-alert>
     <b-card>
       <b-form-group label="Nome:">
         <b-form-input
@@ -50,6 +59,7 @@ export default {
   name: "App",
   data() {
     return {
+      mensagens: [],
       usuarios: [],
       id: null,
       usuario: {
@@ -63,31 +73,47 @@ export default {
       this.usuario.nome = "";
       this.usuario.email = "";
       this.id = null;
+      this.mensagens = [];
     },
     carregar(id) {
-      console.log('ID: ', id)
+      console.log("ID: ", id);
       this.id = id;
       this.usuario = { ...this.usuarios[id] };
     },
     excluir(id) {
       try {
-        this.$http.delete(`/usuarios/${id}.json`).then(() => this.limpar());
+        this.$http.delete(`/usuarios/${id}.json`).then(() => {
+          this.limpar()
+          this.mensagens.push({
+            texto: 'Usuário excluído com sucesso!',
+            tipo: 'success'
+          })
+        });
       } catch (error) {
-        console.log('Erro ao tentar excluir o usuário.', error)
-      }finally{
-        this.obterUsuarios()
+        this.mensagens.push({
+          texto: 'Erro ao tentar excluir o usuário.',
+          tipo: 'danger'
+        })
+      } finally {
+        this.obterUsuarios();
       }
     },
     salvar() {
       try {
-        const metodo = this.id ? 'patch' : 'post'
-        const finalURL = this.id ? `/${this.id}.json` : '.json'
-        this.$http[metodo](`/usuarios${finalURL}`, this.usuario).then(() => this.limpar);
+        const metodo = this.id ? "patch" : "post";
+        const finalURL = this.id ? `/${this.id}.json` : ".json";
+        this.$http[metodo](`/usuarios${finalURL}`, this.usuario).then(() => {
+          this.limpar();
+          this.mensagens.push({
+            texto: "Operação realizada com sucesso!",
+            tipo: "success",
+          });
+        });
       } catch (error) {
         console.log("Erro ao salvar dados. :(");
       } finally {
         this.limpar();
-        this.obterUsuarios()
+        // this.obterUsuarios();
       }
     },
     obterUsuarios() {
